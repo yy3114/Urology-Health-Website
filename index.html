@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>八月份泌尿保健指南</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for Inter font and general aesthetics */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light blue-gray background */
+            color: #334155; /* Dark text color */
+        }
+        .container {
+            max-width: 800px;
+            min-height: 80vh; /* Ensure container has enough height for content */
+            display: flex;
+            flex-direction: column;
+        }
+        .content-section {
+            display: none; /* Hidden by default */
+            flex-grow: 1; /* Allows content to take available space */
+            overflow-y: auto; /* Enable vertical scrolling for content */
+            max-height: calc(100vh - 100px); /* Adjust based on header/footer height */
+            padding-bottom: 2rem; /* Add some padding at the bottom for scrolling */
+        }
+        .cover-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            flex-grow: 1;
+        }
+        .image-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Limit image width */
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        .image-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 0.75rem; /* Rounded corners for the image */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+        }
+
+        /* 精修圖片上的覆蓋按鈕 */
+        .overlay-button {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            background: rgba(255, 255, 255, 0); /* 初始完全透明 */
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 增加陰影過渡 */
+            border-radius: 0.75rem; /* Match image border-radius */
+            display: flex; /* 讓內容居中 */
+            align-items: center;
+            justify-content: center;
+            color: white; /* 文字顏色 */
+            font-weight: bold;
+            font-size: 1.25rem; /* 文字大小 */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6); /* 文字陰影 */
+            overflow: hidden; /* 隱藏超出按鈕範圍的內容 */
+        }
+        .overlay-button span {
+            opacity: 0; /* 初始文字隱藏 */
+            transform: translateY(10px); /* 初始文字稍微下移 */
+            transition: opacity 0.3s ease, transform 0.3s ease; /* 文字過渡效果 */
+        }
+        .overlay-button:hover {
+            background: rgba(60, 130, 200, 0.3); /* 懸停時輕微藍色透明背景 */
+            box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.7); /* 懸停時內部邊框效果 */
+        }
+        .overlay-button:hover span {
+            opacity: 1; /* 懸停時文字顯示 */
+            transform: translateY(0); /* 文字恢復原位 */
+        }
+        .left-half {
+            left: 0;
+            width: 50%;
+        }
+        .right-half {
+            right: 0;
+            width: 50%;
+        }
+
+        /* 精修主要行動按鈕 - 淡棕色、稍大 */
+        .action-button {
+            /* 基礎樣式 */
+            @apply text-white font-bold py-4 px-10 rounded-full shadow-lg transition duration-300 ease-in-out transform; /* 增加 padding 使按鈕更大 */
+            /* 漸層背景 - 淡棕色系 */
+            background-image: linear-gradient(135deg, #D2B48C 0%, #C3B091 50%, #A08B73 100%);
+            /* 更強的陰影 - 與漸層顏色相關的陰影 */
+            box-shadow: 0 12px 25px rgba(160, 139, 115, 0.4);
+            margin-top: 1.5rem;
+            width: fit-content;
+            border: none; /* 移除邊框 */
+            position: relative; /* 用於偽元素 */
+            overflow: hidden; /* 隱藏溢出效果 */
+            font-size: 1.15rem; /* 稍微增大字體 */
+        }
+        .action-button:hover {
+            transform: translateY(-5px) scale(1.02); /* 輕微上浮並放大 */
+            /* 懸停時漸層變深 - 更深的棕色系 */
+            background-image: linear-gradient(135deg, #B8860B 0%, #A57C00 50%, #8B6914 100%);
+            box-shadow: 0 18px 35px rgba(139, 105, 20, 0.6); /* 更強的陰影 */
+        }
+        .action-button:active {
+            transform: translateY(0px) scale(0.98); /* 點擊時下壓效果 */
+            box-shadow: 0 5px 10px rgba(160, 139, 115, 0.3); /* 點擊時陰影變小 */
+        }
+        /* 氣泡效果 */
+        .action-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: width 0.4s ease-out, height 0.4s ease-out, opacity 0.4s ease-out;
+        }
+        .action-button:hover::before {
+            width: 200%;
+            height: 200%;
+            opacity: 1;
+        }
+
+
+        /* 精修返回按鈕 */
+        .back-button {
+            @apply bg-transparent text-gray-700 font-semibold py-2 px-5 rounded-lg border-2 border-gray-400 transition duration-300 ease-in-out transform;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 柔和陰影 */
+            margin-bottom: 1.5rem;
+            width: fit-content;
+        }
+        .back-button:hover {
+            @apply bg-gray-100 border-gray-500 text-gray-900;
+            transform: translateY(-2px) scale(1.02); /* 輕微上浮 */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* 陰影加深 */
+        }
+        .back-button:active {
+            transform: translateY(0px) scale(0.98); /* 點擊時下壓效果 */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Table styling for comparison section */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #cbd5e1; /* border-slate-300 */
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .comparison-table th {
+            background-color: #e2e8f0; /* bg-slate-200 */
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+    <div class="container mx-auto bg-white shadow-lg rounded-xl p-6 sm:p-8 md:p-10">
+
+        <!-- Cover Section -->
+        <section id="cover-section" class="cover-section">
+            <header class="text-center mb-6">
+                <h1 class="text-3xl sm:text-4xl font-bold text-blue-700 mb-2">八月份泌尿保健指南</h1>
+                <p class="text-lg text-gray-600">點擊圖片或下方按鈕探索泌尿保健知識</p>
+            </header>
+
+            <div class="image-container">
+                <img src="https://i.postimg.cc/sgqjTRPv/1000022401.jpg" alt="人體示意圖，泌尿系統保健">
+                <!-- Left Half Button (Western Medicine) -->
+                <button id="western-btn" class="overlay-button left-half" aria-label="西醫觀點">
+                    <span>西醫觀點</span>
+                </button>
+                <!-- Right Half Button (TCM) -->
+                <button id="tcm-btn" class="overlay-button right-half" aria-label="中醫觀點">
+                    <span>中醫觀點</span>
+                </button>
+            </div>
+
+            <!-- Comparison Button -->
+            <button id="comparison-main-btn" class="action-button">中西醫觀點比較</button>
+        </section>
+
+        <!-- Western Medicine Content Section -->
+        <section id="western-content-section" class="content-section bg-blue-50 rounded-lg p-6">
+            <button class="back-button" onclick="showCover()">返回封面</button>
+            <h2 class="text-2xl font-semibold text-blue-600 mb-4">西醫觀點：泌尿保健之道</h2>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                西方醫學在泌尿系統健康方面，主要關注生理結構、病原體感染及功能性障礙。
+                以下是八月份泌尿保健的西醫觀點建議：
+            </p>
+
+            <div class="mb-6 p-4 bg-white rounded-lg shadow-sm">
+                <h3 class="text-xl font-semibold text-blue-800 mb-2">1. 充足的水分攝取</h3>
+                <p class="mb-3">
+                    在炎熱的天氣裡，保持身體水分充足是預防泌尿道感染的關鍵。
+                    水有助於沖洗尿道中的細菌，降低感染風險。
+                </p>
+                <ul class="list-disc list-inside text-gray-700 space-y-2">
+                    <li><strong class="text-blue-700">目標：</strong> 每天至少飲用 8 杯（約 2 公升）水。如果出汗多，則需要更多。</li>
+                    <li><strong class="text-blue-700">選擇：</strong> 優先選擇清水。果汁、含糖飲料和咖啡因飲料應適量，因為它們可能刺激膀胱。</li>
+                    <li><strong class="text-blue-700">提示：</strong> 隨身攜帶水瓶，並定期補充水分，即使不感到口渴。</li>
+                </ul>
+                <div class="mt-4 text-center">
+                    <img src="https://i.postimg.cc/Jz5NVPn3/1753120260958.png" alt="">
+                    <p class="text-sm text-gray-500 mt-2">多喝水有助於泌尿系統健康。</p>
+                </div>
+            </div>
+
+            <div class="mb-6 p-4 bg-white rounded-lg shadow-sm">
+                <h3 class="text-xl font-semibold text-blue-800 mb-2">2. 健康飲食習慣</h3>
+                <p class="mb-3">
+                    某些食物和飲料可能會刺激膀胱或促進細菌生長。
+                </p>
+                <ul class="list-disc list-inside text-gray-700 space-y-2">
+                    <li><strong class="text-blue-700">避免：</strong> 過多的咖啡因、酒精、辛辣食物和柑橘類水果，這些可能刺激膀胱。</li>
+                    <li><strong class="text-blue-700">益生菌：：</strong> 考慮攝取含有益生菌的食物，如優格或克菲爾，它們有助於維持身體的健康菌群。</li>
+                    <li><strong class="text-blue-700">蔓越莓：：</strong> 蔓越莓產品（如無糖蔓越莓汁或補充劑）可能對預防泌尿道感染有益，但不能替代醫療治療。</li>
+                </ul>
+                <div class="mt-4 text-center">
+                    <img src="https://i.postimg.cc/kXcG7ZQ5/1753120508485.png" alt="">
+                    <p class="text-sm text-gray-500 mt-2">均衡飲食對泌尿健康很重要。</p>
+                </div>
+            </div>
+
+            <div class="mb-6 p-4 bg-white rounded-lg shadow-sm">
+                <h3 class="text-xl font-semibold text-blue-800 mb-2">3. 良好個人衛生</h3>
+                <p class="mb-3">
+                    良好的個人衛生習慣可以顯著降低泌尿道感染的風險。
+                </p>
+                <ul class="list-disc list-inside text-gray-700 space-y-2">
+                    <li><strong class="text-blue-700">排尿：</strong> 感覺到尿意時應及時排尿，不要憋尿。性行為後也應盡快排尿。</li>
+                    <li><strong class="text-blue-700">擦拭：：</strong> 女性在排便後應從前往後擦拭，以防止細菌從肛門進入尿道。</li>
+                    <li><strong class="text-blue-700">衣物：：</strong> 穿著棉質內褲和寬鬆透氣的衣物，避免穿著過緊或合成纖維的衣物，以減少濕氣和細菌滋生。</li>
+                    <li><strong class="text-blue-700">淋浴：</strong> 建議淋浴而不是盆浴，並避免使用刺激性的肥皂或女性衛生產品。</li>
+                </ul>
+                <div class="mt-4 text-center">
+                    <img src="https://i.postimg.cc/4dZj48bJ/1753120702947.png" alt="">
+                    <p class="text-sm text-gray-500 mt-2">保持個人衛生是預防感染的關鍵。</p>
+                </div>
+            </div>
+
+            <div class="mb-6 p-4 bg-white rounded-lg shadow-sm">
+                <h3 class="text-xl font-semibold text-blue-800 mb-2">4. 何時尋求醫療協助？</h3>
+                <p class="mb-3">
+                    如果您出現泌尿道感染的症狀，請務必及時就醫。
+                </p>
+                <ul class="list-disc list-inside text-gray-700 space-y-2">
+                    <li><strong class="text-blue-700">常見症狀：</strong> 頻尿、排尿時灼熱感或疼痛、尿液混濁或有異味、下腹部疼痛、發燒或發冷。</li>
+                    <li><strong class="text-blue-700">重要性：：</strong> 泌尿道感染如果不及時治療，可能會導致更嚴重的腎臟感染。</li>
+                    <li><strong class="text-blue-700">就醫：：</strong> 如果您有任何疑慮或症狀持續存在，請立即諮詢醫生。</li>
+                </ul>
+                <div class="mt-4 text-center">
+                    <img src="https://i.postimg.cc/7Yx71SXf/file-000000008b5c61fdbc4b7cb78403033c.png" alt="">
+                    <p class="text-sm text-gray-500 mt-2">出現症狀時請務必就醫。</p>
+                </div>
+            </div>
+            <button class="back-button" onclick="showCover()">返回封面</button>
+        </section>
+
+        <!-- Traditional Chinese Medicine Content Section -->
+        <section id="tcm-content-section" class="content-section bg-green-50 rounded-lg p-6">
+            <button class="back-button" onclick="showCover()">返回封面</button>
+            <h2 class="text-2xl font-semibold text-green-600 mb-4">中醫觀點：泌尿保健之道</h2>
+            <p class="mb-3">
+                中醫認為泌尿系統問題常與體內的「濕熱」或「腎」的功能失衡有關。
+                養生之道在於平衡陰陽，調和氣血。
+            </p>
+            <ul class="list-disc list-inside text-gray-700 space-y-2 mb-6">
+                <li><strong class="text-green-700">濕熱：</strong> 夏季濕氣重，容易形成濕熱體質，濕熱下注膀胱則易引起泌尿道感染。應避免過食油膩、辛辣、甜膩之品。</li>
+                <li><strong class="text-green-700">腎：</strong> 中醫的「腎」不僅指腎臟，更涵蓋生殖、泌尿、骨骼、毛髮等系統功能。腎氣充足則泌尿功能正常。</li>
+                <li><strong class="text-green-700">飲食調養：：</strong>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><strong class="text-green-600">清熱利濕：</strong> 多食冬瓜、薏仁、綠豆、赤小豆、玉米鬚等有助於清熱利濕的食物。</li>
+                        <li><strong class="text-green-600">滋陰補腎：：</strong> 適量攝取黑芝麻、核桃、枸杞、山藥等，有助於滋養腎陰。</li>
+                        <li><strong class="text-green-600">避免：</strong> 減少冰冷、生冷、油炸、燒烤及過於辛辣刺激的食物，以免加重濕熱。</li>
+                    </ul>
+                </li>
+                <li><strong class="text-green-700">生活作息：：</strong> 避免熬夜，保持充足睡眠，以養腎氣。避免久坐，適度運動，促進氣血循環。</li>
+                <li><strong class="text-green-700">足部保暖：：</strong> 即使是夏天，也要注意足部保暖，避免寒氣入侵，影響腎經。</li>
+            </ul>
+            <div class="mt-4 text-center">
+                <img src="https://i.postimg.cc/HsJXnTLL/1753120000358.png" alt="中醫養生觀念圖：人體經絡與穴位示意">
+                <p class="text-sm text-gray-500 mt-2">中醫強調整體平衡與濕熱調理。</p>
+            </div>
+            <button class="back-button" onclick="showCover()">返回封面</button>
+        </section>
+
+        <!-- Comparison Content Section -->
+        <section id="comparison-content-section" class="content-section bg-purple-50 rounded-lg p-6">
+            <button class="back-button" onclick="showCover()">返回封面</button>
+            <h2 class="text-2xl font-semibold text-purple-600 mb-4">中西醫觀點比較</h2>
+            <p class="mb-3">
+                西方醫學和中醫在泌尿保健上有著不同的理論基礎和方法，但最終目標都是維護健康。
+            </p>
+            <table class="comparison-table text-gray-700 mb-6">
+                <thead>
+                    <tr>
+                        <th>面向</th>
+                        <th>西方醫學觀點</th>
+                        <th>中醫觀點</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>病因</strong></td>
+                        <td>主要歸因於細菌感染（如大腸桿菌）、解剖結構、免疫力下降等。</td>
+                        <td>多歸因於濕熱下注、腎氣虧虛、肝鬱氣滯等體內失衡。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>診斷</strong></td>
+                        <td>尿液檢查（尿常規、尿培養）、影像學檢查（超聲波、CT）等。</td>
+                        <td>望聞問切（觀察舌象、脈象、聽聲音、嗅氣味、詢問症狀）。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>治療</strong></td>
+                        <td>抗生素治療感染、手術糾正結構問題、藥物緩解症狀。</td>
+                        <td>中藥調理、針灸、推拿、食療、調整生活習慣以恢復身體平衡。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>預防</strong></td>
+                        <td>多喝水、注意個人衛生、及時排尿、避免刺激性食物。</td>
+                        <td>清熱利濕、滋陰補腎、避免濕熱飲食、保持良好作息、情志調暢。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>關注點</strong></td>
+                        <td>針對病原體和器官的局部治療。</td>
+                        <td>強調人體是一個整體，注重全身氣血陰陽的平衡。</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="mt-4 text-gray-700">
+                兩者各有優勢，在實際生活中，結合中西醫的智慧，取長補短，往往能達到更好的保健效果。
+                例如，在急性感染期，西醫的抗生素治療能快速控制病情；而在康復期或日常保健中，中醫的調理則能幫助身體恢復平衡，減少復發。
+            </p>
+            <div class="mt-4 text-center">
+                <img src="https://placehold.co/600x300/D1C4E9/000000?text=中西醫結合" alt="中西醫結合">
+                <p class="text-sm text-gray-500 mt-2">結合中西醫觀點，全面維護泌尿健康。</p>
+            </div>
+            <button class="back-button" onclick="showCover()">返回封面</button>
+        </section>
+
+        <!-- Footer Section -->
+        <footer class="text-center mt-8 text-gray-500 text-sm">
+            <p>&copy; 2025 泌尿保健指南。所有內容僅供參考，不能替代專業醫療建議。</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const coverSection = document.getElementById('cover-section');
+            const westernContentSection = document.getElementById('western-content-section');
+            const tcmContentSection = document.getElementById('tcm-content-section');
+            const comparisonContentSection = document.getElementById('comparison-content-section');
+
+            const westernBtn = document.getElementById('western-btn');
+            const tcmBtn = document.getElementById('tcm-btn');
+            const comparisonMainBtn = document.getElementById('comparison-main-btn');
+
+            // Function to hide all content sections and show the specified one
+            function showSection(sectionToShow) {
+                coverSection.style.display = 'none';
+                westernContentSection.style.display = 'none';
+                tcmContentSection.style.display = 'none';
+                comparisonContentSection.style.display = 'none';
+
+                sectionToShow.style.display = 'block';
+                // Scroll to the top of the newly displayed section
+                sectionToShow.scrollTop = 0;
+            }
+
+            // Function to show the cover section
+            window.showCover = function() { // Made global for onclick in HTML
+                westernContentSection.style.display = 'none';
+                tcmContentSection.style.display = 'none';
+                comparisonContentSection.style.display = 'none';
+                coverSection.style.display = 'flex'; // Cover section uses flex for centering
+            };
+
+            // Event Listeners
+            westernBtn.addEventListener('click', () => {
+                showSection(westernContentSection);
+            });
+
+            tcmBtn.addEventListener('click', () => {
+                showSection(tcmContentSection);
+            });
+
+            comparisonMainBtn.addEventListener('click', () => {
+                showSection(comparisonContentSection);
+            });
+
+            // Initially show the cover section
+            showCover();
+        });
+    </script>
+</body>
+</html>
+
